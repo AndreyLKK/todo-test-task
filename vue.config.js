@@ -1,7 +1,7 @@
 const { defineConfig } = require("@vue/cli-service");
 
 module.exports = defineConfig({
-  base: "/todo-test-task/",
+  publicPath: "/todo-test-task/",
   lintOnSave: false,
   css: {
     loaderOptions: {
