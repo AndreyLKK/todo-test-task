@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "core-js": "^3.8.3",
@@ -32,6 +34,7 @@
     "sass-loader": "^16.0.2",
     "typescript": "~4.5.5"
   },
+  "homepage": "https://andreylkk.github.io/todo-test-task",
   "eslintConfig": {
     "root": true,
     "env": {
