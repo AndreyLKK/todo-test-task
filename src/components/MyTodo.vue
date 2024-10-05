@@ -130,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, onMounted, ref, nextTick } from "vue";
+import { defineComponent, onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useMyStore } from "@/store/store";
 import { getLocalStorage, setLocalStorage } from "@/utils/localStorage";
 import MyIcon from "@/UI/MyIcon.vue";
@@ -142,29 +142,33 @@ defineComponent({
 });
 
 const inputTask = ref<(HTMLElement | null)[]>([]);
-const buttonEd = ref<HTMLElement | null>(null);
+const buttonEd = ref<(HTMLElement | null)[]>([]);
 
 onMounted(() => {
   myStore.tasks = getLocalStorage("tasks");
-  const handleBeforeUnload = () => {
-    myStore.tasks.map((el) => (el.editing = false));
-    setLocalStorage("tasks", myStore.tasks);
-  };
-
   window.addEventListener("beforeunload", handleBeforeUnload);
 });
 
+onUnmounted(() => {
+  window.removeEventListener("beforeunload", handleBeforeUnload);
+});
+
+const handleBeforeUnload = () => {
+  myStore.tasks.map((el) => (el.editing = false));
+  setLocalStorage("tasks", myStore.tasks);
+};
+
 function focusTaskInput(idx: number) {
   nextTick(() => {
-    if (inputTask.value[idx]) {
-      inputTask.value[idx].focus();
-    }
+    const inputElement = inputTask.value[idx];
+    if (inputElement) return inputElement.focus();
   });
 }
 
 function focusTaskButton(idx: number) {
-  if (buttonEd.value[idx]) {
-    buttonEd.value[idx].focus();
+  const buttonElement = buttonEd.value[idx];
+  if (buttonElement) {
+    buttonElement.focus();
     myStore.tasks[idx].title = myStore.edTask;
     myStore.tasks[idx].editing = false;
     setLocalStorage("tasks", myStore.tasks);
